@@ -26,7 +26,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.scoping import ScopedSession
 from sqlalchemy.orm.query import Query
-from sqlalchemy.orm import Mapper, SynonymProperty, object_mapper, mapperlib
+from sqlalchemy.orm import Mapper, SynonymProperty, object_mapper
 from sqlalchemy.orm.exc import UnmappedClassError, NoResultFound, UnmappedInstanceError
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.schema import Column
@@ -60,10 +60,11 @@ class SAORMProvider(IProvider):
         self.engine, self.session, self.metadata = self._get_engine(hint, hints)
 
     def class_mapper(self, entity):
+        class_to_mapper = getattr(mapperlib, 'class_mapper', getattr(mapperlib, '_class_to_mapper'))
         if isinstance(entity, str):
-            return mapperlib.class_mapper(mapped_class(self.engine, entity))
+            return class_to_mapper(mapped_class(self.engine, entity))
         else:
-            return mapperlib.class_mapper(entity)
+            return class_to_mapper(entity)
 
 
     def _get_engine(self, hint, hints):
