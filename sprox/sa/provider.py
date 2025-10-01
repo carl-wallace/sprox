@@ -26,7 +26,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.scoping import ScopedSession
 from sqlalchemy.orm.query import Query
-from sqlalchemy.orm import Mapper, SynonymProperty, object_mapper
+from sqlalchemy.orm import Mapper, SynonymProperty, object_mapper, mapperlib
 from sqlalchemy.orm.exc import UnmappedClassError, NoResultFound, UnmappedInstanceError
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.schema import Column
