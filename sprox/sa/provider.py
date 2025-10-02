@@ -20,7 +20,7 @@ Released under MIT license.
 """
 import inspect
 import re
-from sqlalchemy import and_, or_, DateTime, Date, Interval, Integer, MetaData, desc as _desc, func
+from sqlalchemy import and_, or_, DateTime, Date, Interval, Integer, MetaData, desc as _desc, func, text
 from sqlalchemy import String
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm.session import Session
@@ -329,7 +329,11 @@ class SAORMProvider(IProvider):
                                 else:
                                     v = self._adapt_type(v, pk[0])
                                 #only add those items that come back
-                                new_v = self.session.query(target).get(v)
+                                if isinstance(target, str):
+                                    new_v = [self.session.query(mapped_class(self.engine, target)).get(value)]
+                                else:
+                                    new_v = self.session.query(text(target)).get(v)
+
                                 if new_v is not None:
                                     target_obj.append(new_v)
                     elif prop.uselist:
@@ -355,7 +359,10 @@ class SAORMProvider(IProvider):
                                 value = tuple(value)
                             else:
                                 value = self._adapt_type(value, list(prop.remote_side)[0])
-                            target_obj = self.session.query(target).get(value)
+                            if isinstance(target, str):
+                                target_obj = [self.session.query(mapped_class(self.engine, target)).get(value)]
+                            else:
+                                target_obj = [self.session.query(target).get(value)]
                     params[relation] = target_obj
                 else:
                     if prop.uselist:
