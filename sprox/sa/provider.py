@@ -348,7 +348,7 @@ class SAORMProvider(IProvider):
                             if isinstance(target, str):
                                 target_obj = [self.session.query(mapped_class(self.engine, target)).get(value)]
                             else:
-                                target_obj = [self.session.query(target).get(value)]
+                                target_obj = self.session.query(target).get(value)
                     else:
                         try:
                             object_mapper(value)
@@ -360,9 +360,9 @@ class SAORMProvider(IProvider):
                             else:
                                 value = self._adapt_type(value, list(prop.remote_side)[0])
                             if isinstance(target, str):
-                                target_obj = [self.session.query(mapped_class(self.engine, target)).get(value)]
+                                target_obj = self.session.query(mapped_class(self.engine, target)).get(value)
                             else:
-                                target_obj = [self.session.query(target).get(value)]
+                                target_obj = self.session.query(target).get(value)
                     params[relation] = target_obj
                 else:
                     if prop.uselist:
