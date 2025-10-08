@@ -41,7 +41,7 @@ def mapped_classes(engine):
     classes = []
     for registry in _all_registries():
         for mapper in registry.mappers:
-            mapped_engine = mapper.tables[0].bind
+            mapped_engine = mapper.tables[0].metadata.bind
             if engine is None:
                 classes.append(mapper.class_)
             if mapped_engine is not None and mapped_engine != engine:
